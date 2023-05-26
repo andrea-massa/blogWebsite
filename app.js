@@ -26,3 +26,25 @@ app.get('/', (req, res) => {
     }
     res.render('home', {data});
 })
+
+app.get('/about', (req, res) => {
+    const data = {
+        metadata : {
+            pageTitle: 'About Us',
+            author: 'Andrea Massa'            
+        }
+    }
+    res.render('about', {data});
+})
+
+app.get('/contact', (req, res) => {
+    const data = {
+        phoneNumber: '123-456-7891',
+        email: 'exampleemail@domain.com',
+        metadata : {
+            pageTitle: 'Contact',
+            author: 'Andrea Massa'            
+        }
+    }
+    res.render('contact', {data})
+})
