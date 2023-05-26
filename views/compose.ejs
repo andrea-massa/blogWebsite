@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('includes/header', {metadata : data.metadata}); %>
+
+<main class="container-fluid">
+    <h1>Compose</h1>
+    <form action="/" method="POST">
+        <div class="mb-3">
+            <label class="form-label" for="contentTitle">Title</label>    
+            <input class="form-control" type="text" id="contentTitle" name="contentTitle">
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="contentText">Content</label>                
+            <textarea class="form-control" id="contentText" name="contentText"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Publish</button>
+    </form>
+</main>
+
+<%- include('includes/footer', {metadata: data.metadata}); %>
+</body>
+</html>

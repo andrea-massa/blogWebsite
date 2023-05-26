@@ -3,6 +3,8 @@ const ejs = require('ejs')
 const bodyParser = require('body-parser');
 const app = express();
 
+var posts = [];
+
 //Setting up view engine and view directory
 app.set('view engine', 'ejs')
 app.set('views', __dirname + '/views')
@@ -17,14 +19,22 @@ app.listen(3000, () => {
 
 app.get('/', (req, res) => {
     const data = {
-        blogTitle : 'Andrea\'s Blog',
-        blogHeader: 'My name is Andrea Massa! Welcome to my blog!',
+        posts: posts,
         metadata: {
             pageTitle: 'Home',
             author: 'Andrea Massa'
         }        
     }
     res.render('home', {data});
+})
+
+app.post('/', (req, res) => {    
+    let post = {
+        title : req.body.contentTitle,
+        text : req.body.contentText
+    };
+    posts.push(post);
+    res.redirect('/');
 })
 
 app.get('/about', (req, res) => {
@@ -48,3 +58,32 @@ app.get('/contact', (req, res) => {
     }
     res.render('contact', {data})
 })
+
+app.get('/compose', (req, res) => {
+    const data = {
+        metadata: {
+            pageTitle: 'Compose',
+            author: 'Andrea Massa'
+        }
+    }
+    res.render('compose', {data})
+})
+
+app.get('/posts/:title', (req, res) => {
+    const postTitle = req.params.title;        
+    posts.forEach((post) => {
+        if(post.title.toLocaleLowerCase() == postTitle.toLowerCase()){
+            const data = {
+                post: post,
+                metadata: {
+                    pageTitle: `Post: ${post.title.toLocaleLowerCase()}`,
+                    author: 'Andrea Massa'
+                }
+            }
+            res.render('post', {data});
+        }
+    })   
+})
+
+
+

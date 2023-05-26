@@ -3,14 +3,8 @@
 <%- include('includes/header', {metadata : data.metadata}); %>
 
 <main class="container-fluid">
-    <h1>Home</h1>
-    <hr>
-
-    <% data.posts.forEach(post => { %>
-        <h1><%= post.title %></h1>
-        <p><%= post.text %></p>
-    <%});                           %>
-    
+    <h1><%= data.post.title %></h1>
+    <p><%= data.post.text %></p>
 </main>
 
 <%- include('includes/footer', {metadata: data.metadata}); %>
