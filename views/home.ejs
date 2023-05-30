@@ -2,13 +2,16 @@
 <html lang="en">
 <%- include('includes/header', {metadata : data.metadata}); %>
 
-<main class="container-fluid">
+<main class="container">
     <h1>Home</h1>
     <hr>
 
     <% data.posts.forEach(post => { %>
         <h1><%= post.title %></h1>
-        <p><%= post.text %></p>
+        <% if(post.text.length > 100){  %>
+            <% post.text = post.text.slice(0, 100) + '...'; %>
+        <%  } %>
+        <p><%= post.text %><a href="/posts/<%=post.title %>"> Read More...</a></p>        
     <%});                           %>
     
 </main>

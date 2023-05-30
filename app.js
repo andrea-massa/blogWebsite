@@ -19,7 +19,7 @@ app.listen(3000, () => {
 
 app.get('/', (req, res) => {
     const data = {
-        posts: posts,
+        posts: posts,        
         metadata: {
             pageTitle: 'Home',
             author: 'Andrea Massa'
