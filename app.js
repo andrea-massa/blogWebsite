@@ -13,7 +13,10 @@ app.use(bodyParser.urlencoded({extended: true}))
 //Set up static content
 app.use(express.static(__dirname + '/public'))
 
-app.listen(3000, () => {
+
+//Server listening on process.env.PORT or port 3000 depending 
+//on wether code is running on local machine or heroku server
+app.listen(process.env.PORT || 3000, () => {
     console.log('Server started on port 3000');
 })
 
