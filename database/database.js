@@ -7,8 +7,7 @@ async function connectLocal(){
 }
 
 async function connectAtlas(){
-    let password = 'Olicard_101'
-    mongoose.connect(process.env.VARIABLE_NAME)
+    mongoose.connect(process.env.MONGO_ATLAS_URL)
         .then(() => {console.log('Successful connection to Atlas DB')})
         .catch((e) => {console.log('Error connecting to db\n' + e)});
 }
