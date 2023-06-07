@@ -7,12 +7,12 @@
     <hr>
 
     <% data.posts.forEach(post => { %>
-        <h1><%= post.title %></h1>
+        <h1><%= post.title %></h1>        
         <% if(post.text.length > 100){  %>
-            <% post.text = post.text.slice(0, 100) + '...'; %>
+            <% post.text = post.text.slice(0, 100) + '...'; %>            
         <%  } %>
-        <p><%= post.text %><a href="/posts/<%=post.title %>"> Read More...</a></p>        
-    <%});                           %>
+        <p><%= post.text %><a href="/posts/<%= post._id %>"> Read More...</a></p>        
+    <%});%>
     
 </main>
 

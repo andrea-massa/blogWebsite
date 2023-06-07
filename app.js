@@ -1,9 +1,9 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const ejs = require('ejs')
 const bodyParser = require('body-parser');
 const app = express();
 
-var posts = [];
 
 //Setting up view engine and view directory
 app.set('view engine', 'ejs')
@@ -14,15 +14,25 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use(express.static(__dirname + '/public'))
 
 
+//SETTING UP DATABASE
+mongoose.connect('mongodb://127.0.0.1:27017/blogsite?directConnection=true')
+    .then(() => {console.log('Successful connection to DB')})
+    .catch((e) => {console.log('Error connecting to db\n' + e)});
+
+//Creating models
+const blogSchema = new mongoose.Schema({title: String, text: String})
+const Blog = new mongoose.model('blog', blogSchema);
+
+
 //Server listening on process.env.PORT or port 3000 depending 
 //on wether code is running on local machine or heroku server
 app.listen(process.env.PORT || 3000, () => {
     console.log('Server started on port 3000');
 })
 
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
     const data = {
-        posts: posts,        
+        posts: await Blog.find({}),
         metadata: {
             pageTitle: 'Home',
             author: 'Andrea Massa'
@@ -31,12 +41,12 @@ app.get('/', (req, res) => {
     res.render('home', {data});
 })
 
-app.post('/', (req, res) => {    
-    let post = {
+app.post('/', async (req, res) => {    
+    let newPost = {
         title : req.body.contentTitle,
         text : req.body.contentText
     };
-    posts.push(post);
+    await new Blog(newPost).save();
     res.redirect('/');
 })
 
@@ -72,20 +82,21 @@ app.get('/compose', (req, res) => {
     res.render('compose', {data})
 })
 
-app.get('/posts/:title', (req, res) => {
-    const postTitle = req.params.title;        
-    posts.forEach((post) => {
-        if(post.title.toLocaleLowerCase() == postTitle.toLowerCase()){
-            const data = {
-                post: post,
-                metadata: {
-                    pageTitle: `Post: ${post.title.toLocaleLowerCase()}`,
-                    author: 'Andrea Massa'
-                }
-            }
-            res.render('post', {data});
+app.get('/posts/:postid', async (req, res) => {
+    const postId = req.params.postid;        
+    try {        
+        const data = {
+            post: await Blog.findById(postId),
+            metadata: {
+                pageTitle: 'Post',
+                author: 'Andrea Massa'
+            }        
         }
-    })   
+        res.render('post', {data});     
+    } catch (error) {
+        console.log(error)
+        res.send(error)
+    }
 })
 
 
