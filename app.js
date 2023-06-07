@@ -1,8 +1,9 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const ejs = require('ejs')
 const bodyParser = require('body-parser');
 const app = express();
+const database = require(`${__dirname}/database/database.js`);
+const Blog = require(`${__dirname}/database/models/Blog.js`);
 
 
 //Setting up view engine and view directory
@@ -14,22 +15,16 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use(express.static(__dirname + '/public'))
 
 
-//SETTING UP DATABASE
-mongoose.connect('mongodb://127.0.0.1:27017/blogsite?directConnection=true')
-    .then(() => {console.log('Successful connection to DB')})
-    .catch((e) => {console.log('Error connecting to db\n' + e)});
+//Start up Servers
+async function main(){
+    await database.connectLocal()
+    app.listen(process.env.PORT || 3000, () => {
+        console.log('Server started on port 3000');
+    })
+}
 
-//Creating models
-const blogSchema = new mongoose.Schema({title: String, text: String})
-const Blog = new mongoose.model('blog', blogSchema);
 
-
-//Server listening on process.env.PORT or port 3000 depending 
-//on wether code is running on local machine or heroku server
-app.listen(process.env.PORT || 3000, () => {
-    console.log('Server started on port 3000');
-})
-
+// ROUTES
 app.get('/', async (req, res) => {
     const data = {
         posts: await Blog.find({}),
@@ -101,3 +96,4 @@ app.get('/posts/:postid', async (req, res) => {
 
 
 
+main()
